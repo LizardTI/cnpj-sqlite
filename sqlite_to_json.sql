@@ -12,7 +12,7 @@ INSERT INTO new_socios (cnpj_b, socios) SELECT cnpj_b,
        ", 'rep_legal': " || rep_legal ||
        ", 'nome_rep': " || nome_rep ||
        ", 'qual_rep_legal': " || qual_rep_legal ||
-       ", 'faixa_etaria': " || faixa_etaria) || "}]"
+       ", 'faixa_etaria': " || faixa_etaria || "},") || "]"
 FROM   socios
 GROUP  BY cnpj_b;
 
