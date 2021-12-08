@@ -22,4 +22,5 @@ GROUP  BY cnpj_b;
 SELECT *
 FROM empresas AS em
 INNER JOIN estabelecimento AS es ON em.cnpj_b=es.cnpj_b
-INNER JOIN new_socios AS so ON em.cnpj_b=so.cnpj_b;
+INNER JOIN new_socios AS so ON em.cnpj_b=so.cnpj_b
+INNER JOIN simples AS si ON em.cnpj_b=si.cnpj_b;
