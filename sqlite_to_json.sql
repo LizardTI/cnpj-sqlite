@@ -21,6 +21,6 @@ GROUP  BY cnpj_b;
 
 SELECT *
 FROM empresas AS em
-FULL OUTER JOIN estabelecimento AS es ON em.cnpj_b=es.cnpj_b
-FULL OUTER JOIN new_socios AS so ON em.cnpj_b=so.cnpj_b
-FULL OUTER JOIN simples AS si ON em.cnpj_b=si.cnpj_b;
+LEFT JOIN estabelecimento AS es ON em.cnpj_b=es.cnpj_b
+LEFT JOIN new_socios AS so ON em.cnpj_b=so.cnpj_b
+LEFT JOIN simples AS si ON em.cnpj_b=si.cnpj_b;
