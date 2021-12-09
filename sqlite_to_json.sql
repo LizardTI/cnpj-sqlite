@@ -1,6 +1,6 @@
-CREATE TABLE new_socios (cnpj_b TEXT', socios TEXT);
+CREATE TABLE new_socios (cnpj_b TEXT, socios TEXT);
 CREATE INDEX idx_new_socios_cnpj_b ON new_socios (cnpj_b);
-INSERT INTO new_socios (cnpj_b', socios) SELECT cnpj_b',
+INSERT INTO new_socios (cnpj_b, socios) SELECT cnpj_b,
        "[" || Group_concat(
        "{'cnpj':'" || cnpj ||
        "','id_socio':'"|| id_socio ||
