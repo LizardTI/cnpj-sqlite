@@ -20,7 +20,7 @@ GROUP  BY cnpj_b;
 .output cnpj.json
 
 SELECT *
-FROM empresas AS em
-LEFT JOIN estabelecimento AS es ON em.cnpj_b=es.cnpj_b
-LEFT JOIN new_socios AS so ON em.cnpj_b=so.cnpj_b
-LEFT JOIN simples AS si ON em.cnpj_b=si.cnpj_b;
+FROM estabelecimento AS es
+INNER JOIN empresas AS em ON es.cnpj_b=em.cnpj_b
+LEFT JOIN new_socios AS so ON es.cnpj_b=so.cnpj_b
+LEFT JOIN simples AS si ON es.cnpj_b=si.cnpj_b;
