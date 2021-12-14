@@ -41,5 +41,5 @@ function manage_zip_files(){
   mv -v *K* dados-publicos
 }
 
-download_data()
+download_data
 manage_zip_files

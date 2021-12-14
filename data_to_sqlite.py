@@ -123,7 +123,7 @@ class FilesNotFound(Exception):
         return f"Arquivos CSVs não encontrados!!!"
 
 def _load_table(table: str, file_extension: str, columns: list):
-    engine_url = SQLHelper().engine.url
+    engine_url = sql_helper.engine.url
     files = list(glob.glob(os.path.join(OUTPUT_DIR)+'/*'+file_extension))
 
     if files == []:
@@ -140,7 +140,9 @@ class SQLHelper:
     """ Classe que irá concatenar as funcionalidades e manipular SQL. """
 
     def __init__(self):
+        if os.path.exists(SQLITE_FULL_PATH): raise FileExists
         self.engine = sqlalchemy.create_engine(f"sqlite:///{SQLITE_FULL_PATH}")
+        self._pre_sql()
 
     def execute(self, sql: str):
         """ Executa a instrução SQL. """ 
@@ -152,9 +154,15 @@ class SQLHelper:
         sql_query+=' '.join(f"{c} TEXT," for c in columns)
         return sql_query[:-1] + ");"
 
+    def _pre_sql(self):
+        """ Execute instruções SQL ao criar banco de dados """
+        logger.info("Executando pré instruções SQL")
+        self.execute("PRAGMA auto_vacuum=FULL;")
+
+sql_helper = SQLHelper()
+
 def create_tables():
     """ Crias as tabelas e suas respectivas colunas. """
-    sql_helper = SQLHelper()
      
     logger.info(f"Criando as tabelas.")
     for table, columns in TYPE_TABLES_COLUMNS_EXT.items():
@@ -189,19 +197,17 @@ def post_sql():
      """Executa instruções SQL de finais."""
      
      sqls = '''
-     ALTER TABLE empresas RENAME COLUMN cap_soc TO cap_soc_str;
-     ALTER TABLE empresas ADD COLUMN capital_social real;
-     UPDATE empresas SET cap_soc_str = cast(replace(cap_soc_str,',', '.') as real);
-     ALTER TABLE estabelecimento ADD COLUMN cnpj text;
-     UPDATE estabelecimento SET cnpj = cnpj_b||cnpj_o||cnpj_dv;
      CREATE  INDEX idx_empresas_cnpj_b ON empresas (cnpj_b);
      CREATE  INDEX idx_empresas_razao_s ON empresas (razao_s);
      CREATE  INDEX idx_estabelecimento_cnpj_b ON estabelecimento (cnpj_b);
-     CREATE  INDEX idx_estabelecimento_cnpj ON estabelecimento (cnpj);
+     CREATE  INDEX idx_estabelecimento_sit_cad ON estabelecimento (sit_cad);
+     DELETE FROM estabelecimento WHERE sit_cad NOT IN ("02");
 
+     ALTER TABLE estabelecimento ADD COLUMN cnpj text;
+     UPDATE estabelecimento SET cnpj = cnpj_b||cnpj_o||cnpj_dv;
+     
      ALTER TABLE socios RENAME TO socios_original;
-     CREATE INDEX idx_socios_original_cnpj_b
-     ON socios_original(cnpj_b);
+     CREATE INDEX idx_socios_original_cnpj_b ON socios_original(cnpj_b);
 
      CREATE TABLE socios AS 
      SELECT te.cnpj as cnpj, ts.*
@@ -215,28 +221,17 @@ def post_sql():
      CREATE INDEX idx_socios_cnpj_cpf_socio ON socios(cpf_socio);
      CREATE INDEX idx_socios_nome_socio ON socios(nom_socio);
 
-     CREATE INDEX idx_simples_cnpj_basico ON simples(cnpj_b);
+     CREATE INDEX idx_simples_cnpj_basico ON simples(cnpj_b); '''
 
-     CREATE TABLE "_referencia" (
-            "referencia"	TEXT,
-            "valor"	TEXT
-     );
-     '''
-     sql_helper = SQLHelper() 
      logger.info("Aplicando instruções SQL finais.")
      for instr_n, sql in enumerate(sqls.split(';')):
-         logger.info(f"Executando query de número {instr_n}")
+         logger.info(f"Executando instrução SQL de número {instr_n}")
+         logger.info(f"--> {sql}")
          sql_helper.execute(sql)
 
-     qtde_cnpjs = sql_helper.execute("SELECT count(*) as contagem FROM empresas;").fetchone()[0]
-     sql_helper.execute(f"insert into _referencia (referencia, valor) values ('CNPJ', '{dataReferencia}')")
-     sql_helper.execute(f"insert into _referencia (referencia, valor) values ('cnpj_qtde', '{qtde_cnpjs}')")
 
 def cnpj_to_sqlite():
     """ Carrega dos dados CSV para o formato SQLITE. """
-
-    if os.path.exists(SQLITE_FULL_PATH):
-        raise FileExists
 
     logger.info("CNPJ -> SQLITE")
     logger.info("Leia o código fonte para mais informações.")
