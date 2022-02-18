@@ -10,15 +10,19 @@ A partir de 2021 os dados da Receita Federal estão disponíveis nesse [link](ht
 ## Pré-requisitos:
 
 ### Software
-**Linguagem:** _Python 3.8 (ou versão maior)_
-**Gerenciador de pacotes:** _Poetry_
-**Bibliotecas:** _Loguru, SQLAlchemy, Dask e Pandas_
-**Sistema Operacional**: GNU/Linux e/ou Mac OS para executar o arquivo _download_data.sh_ (apesar que acredito que possa funcionar no WSL e/ou Cygwin do Windows).
-**Utilitários**: _Axel_ (irá fazer o download mais rápido dos arquivos .ZIP do site da receita) e _SQLite_.
+
+|Linguagem|Gerenciador de pacotes|Bibliotecas|Sistema Operacional|Utilitários
+|---------|----------------------|-----------|-------------------|-----------
+Python 3.8 (ou versão maior)|Poetry|Loguru, SQLAlchemy, Dask e Pandas|GNU/Linux ou Mac OS*|Axel e SQLite.
+
+
+_* Para executar o arquivo _download_data.sh_ (apesar que acredito que possa funcionar no WSL e/ou Cygwin do Windows)._
+
 ### Hardware
-**Processador**: _Mid-End (i3, i5, i7 ou i9)_
-**Armazenamento**: Espaço livre de no mínimo de 60 GB.
-**RAM**: 6 GB (ou superior)
+
+|Processador|Armazenamento|RAM|
+|-----------|-------------|---|
+|i3 (ou superior)|Espaço livre de no mínimo de 60 GB.|8 GB (ou superior)|
 
 
 ## Utilizando o script:
@@ -46,13 +50,12 @@ Caso não tenha eexecutado ainda o install das dependências, chame:
 E depois no terminal chame o script:
 ```$ ./data_to_sqlite.py```
 
-## Arquivo SQLite já tratado:
+## Geração de arquivo JSON
 
-Arquivo SQLite já extraído, referência 13/11/2021 (.D11113.), está disponível no google drive, zipado em 4 pedaços: no [link](https://drive.google.com/drive/folders/1Gkeq27aHv6UgT8m30fc4hZWMPqdhEHWr?usp=sharing).
+Para geração de arquivo JSON execute o arquivo _data_to_json.sh_:
 
-Utilize o 7-zip para descompacta-los.
+```$ ./data_to_json.sh```
 
-Para pegar o arquivo SQLite, mais atualizado, sugiro ver o README do repositório original [CNPJ-SQLITE](https://github.com/rictom/cnpj-sqlite).
 
 ## Histórico de versões
 
@@ -66,3 +69,4 @@ versão 0.1 (julho/2021)
 ## Créditos
 
 A versão original desse repositório encontra-se [CNPJ-SQLITE](https://github.com/rictom/cnpj-sqlite/) e sinceros agradecimentos ao usuário [rictom](https://github.com/rictom/cnpj-sqlite), autor original do repositório.
+Lá também geralmente o arquivo SQLite já tratado.
